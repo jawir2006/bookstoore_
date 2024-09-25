@@ -13,6 +13,10 @@ if ($result->num_rows > 0) {
 } else {
     die("Buku tidak ditemukan.");
 }
+
+// Ambil data kategori dari database
+$sql_categories = "SELECT id, name FROM categories";
+$result_categories = $conn->query($sql_categories);
 ?>
 
 <!DOCTYPE html>
@@ -55,11 +59,14 @@ if ($result->num_rows > 0) {
                 <label for="categories_name">Jenis Buku:</label>
                 <select id="categories_name" name="categories_name" class="form-control" required>
                     <option value="">-- Pilih Jenis Buku --</option>
-                    <option value="1" <?php if ($book['category_id'] == 1) echo 'selected'; ?>>Fiksi</option>
-                    <option value="2" <?php if ($book['category_id'] == 2) echo 'selected'; ?>>Non-Fiksi</option>
-                    <option value="3" <?php if ($book['category_id'] == 3) echo 'selected'; ?>>Teknologi</option>
-                    <option value="4" <?php if ($book['category_id'] == 4) echo 'selected'; ?>>Biografi</option>
-                    <!-- Tambahkan opsi lainnya sesuai kebutuhan -->
+                    <?php
+                    if ($result_categories->num_rows > 0) {
+                        while ($row = $result_categories->fetch_assoc()) {
+                            $selected = $book['category_id'] == $row['id'] ? 'selected' : '';
+                            echo "<option value='" . $row['id'] . "' $selected>" . $row['name'] . "</option>";
+                        }
+                    }
+                    ?>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Perbarui Buku</button>

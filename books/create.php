@@ -1,3 +1,11 @@
+<?php
+include '../config.php';
+
+// Ambil data kategori dari database
+$sql = "SELECT id, name FROM categories";
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,11 +46,13 @@
                 <label for="categories_name">Jenis Buku:</label>
                 <select id="categories_name" name="categories_name" class="form-control" required>
                     <option value="">-- Pilih Jenis Buku --</option>
-                    <option value="1">Fiksi</option>
-                    <option value="2">Non-Fiksi</option>
-                    <option value="3">Teknologi</option>
-                    <option value="4">Biografi</option>
-                    <!-- Tambahkan opsi lainnya sesuai kebutuhan -->
+                    <?php
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<option value='" . $row['id'] . "'>" . $row['name'] . "</option>";
+                        }
+                    }
+                    ?>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Tambah Buku</button>
